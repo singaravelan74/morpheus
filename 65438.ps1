@@ -1,5 +1,5 @@
-$RDM = "No"
-$instancename = "SACNTE5069"
+$RDM = "<%= customOptions.fnRdm %>"
+$instancename = "<%= customOptions.fnInstanceName %>"
 $deploycloud = "SACLA300-SACF102"
 $ApplicationLocation = "SAC"
 $Application = "ECMp"
@@ -27,5 +27,3 @@ Start-Transcript C:\temp\$instancename.txt
 
 $date = Get-Date -Format 'MM/dd/yyyy hh:mm:ss'
 write-output "Instance Name is : $($instancename)"
-
-Stop-Transcript
