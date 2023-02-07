@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: true
+  tasks:
+    - debug:
+        #morpheus: "{{ morpheus }}"
+        #msg: "{{ morpheus['morpheus']}}"
+        #msg: "{{ morpheus['accountNumber'] }}"
+        msg: "This is : {{ morpheus['user']['linuxUsername'] }}"
+        #msg: "{{ morpheus['instance']['container']['server']['internalIp'] }}"
+        #msg: "{{ morpheus['instance']['container']['server']['osType'] }}"
