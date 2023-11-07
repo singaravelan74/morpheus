@@ -6,7 +6,13 @@
         #morpheus: "{{ morpheus }}"
         #msg: "{{ morpheus['morpheus']}}"
         #msg: "{{ morpheus['accountNumber'] }}"
-        msg: "This is : {{ morpheus['user']['linuxUsername'] }}"
-        msg: "Cloud Code is : {{ morpheus['cloudCode'] }}"
+        #msg: "This is : {{ morpheus['user']['linuxUsername'] }}"
+        #msg: "Cloud Code is : {{ morpheus['cloudCode'] }}"
         #msg: "{{ morpheus['instance']['container']['server']['internalIp'] }}"
         #msg: "{{ morpheus['instance']['container']['server']['osType'] }}"
+        msg: {% if 'instance' in morpheus %}
+             {% set instance_data = morpheus.instance.decode('utf-8') %}
+             {{ instance_data | to_json | safe }}
+             {% else %}
+             {}
+
