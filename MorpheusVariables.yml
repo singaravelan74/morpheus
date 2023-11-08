@@ -2,13 +2,11 @@
 - hosts: all
   gather_facts: true
   tasks:
-    - debug:
-        #morpheus: "{{ morpheus }}"
-        #msg: "{{ morpheus['morpheus']}}"
-        #msg: "{{ morpheus['accountNumber'] }}"
-        #msg: "This is : {{ morpheus['user']['linuxUsername'] }}"
-        #msg: "Cloud Code is : {{ morpheus['cloudCode'] }}"
-        #msg: "{{ morpheus['instance']['container']['server']['internalIp'] }}"
-        #msg: "{{ morpheus['instance']['container']['server']['osType'] }}"
-        msg: "{% if 'instance' in morpheus %}{{ morpheus.instance | to_json | safe }}{% else %}{}{% endif %}"
+    - name: Set a custom variable
+      set_fact:
+        t_morpheus: "{{ morpheus | to_json | safe }}"
+ 
+    - name: Display message
+      debug:
+        var: t_morpheus
 
