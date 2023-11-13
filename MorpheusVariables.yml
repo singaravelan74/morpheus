@@ -8,5 +8,5 @@
  
     - name: Display message
       debug:
-        var: t_morpheus
+        var: t_morpheus_instance
 
