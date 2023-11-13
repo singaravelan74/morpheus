@@ -4,7 +4,7 @@
   tasks:
     - name: Set a custom variable
       set_fact:
-        t_morpheus: "{{ morpheus.instance.createdByUser | to_json | safe }}"
+        t_morpheus_instance: "{{ morpheus.instance | to_json | safe }}"
  
     - name: Display message
       debug:
