@@ -4,7 +4,7 @@
   tasks:
     - name: Include variables
       include_vars:
-        file: group_vars/vars.yml  
+        file: /var/opt/morpheus/morpheus-local/repo/git/c6ef2f28ac555d298ee7532a411ddd5e/group_vars/var.yml
     - name: Display message
       debug:
         var: t_morpheus_instance
