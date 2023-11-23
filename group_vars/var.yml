@@ -1,0 +1,1 @@
+t_morpheus_instance: "{{ morpheus.instance | to_json | safe }}"
