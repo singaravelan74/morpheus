@@ -1,11 +1,8 @@
 ---
 - hosts: all
   gather_facts: true
+  include_vars: ./group_vars/vars.yml
   tasks:
-    - name: Set a custom variable
-      set_fact:
-        t_morpheus_instance: "{{ morpheus.instance | to_json | safe }}"
- 
     - name: Display message
       debug:
         var: t_morpheus_instance
