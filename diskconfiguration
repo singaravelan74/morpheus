@@ -1,0 +1,46 @@
+---
+- name: Convert disk to dynamic, initialize disk, create partition, and format in NTFS
+  hosts: all
+  gather_facts: true
+  become: yes
+
+  vars:
+    data_disks:
+      - disk_number: 1
+        drive_letter: D:
+        label: data1
+      - disk_number: 2
+        drive_letter: E:
+        label: data2
+      - disk_number: 3
+        drive_letter: F:
+        label: data3
+      - disk_number: 4
+        drive_letter: G:
+        label: data4
+
+  tasks:
+    - name: Convert disk to dynamic
+      win_shell: |
+        Get-Disk | Where-Object IsOffline -Eq $True | ForEach-Object { Set-Disk $_.Number -IsOffline $False; Set-Disk $_.Number -IsReadOnly $False }
+
+    - name: Initialize and create partition
+      win_partition:
+        disk_number: "{{ item.disk_number }}"
+        partition_style: gpt
+      loop: "{{ data_disks }}"
+
+    - name: Create partition using all available space
+      win_partition:
+        disk_number: "{{ item.disk_number }}"
+        partition_number: 1
+        size: 100%
+      loop: "{{ data_disks }}"
+
+    - name: Format partition in NTFS
+      win_format:
+        fs_type: NTFS
+        disk: "{{ item.disk_number }}"
+        partition: 1
+        label: "{{ item.label }}"
+      loop: "{{ data_disks }}"
