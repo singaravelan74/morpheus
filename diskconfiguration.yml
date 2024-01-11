@@ -7,16 +7,16 @@
   vars:
     data_disks:
       - disk_number: 1
-        drive_letter: D:
+        drive_letter: "D:"
         label: data1
       - disk_number: 2
-        drive_letter: E:
+        drive_letter: "E:"
         label: data2
       - disk_number: 3
-        drive_letter: F:
+        drive_letter: "F:"
         label: data3
       - disk_number: 4
-        drive_letter: G:
+        drive_letter: "G:"
         label: data4
 
   tasks:
