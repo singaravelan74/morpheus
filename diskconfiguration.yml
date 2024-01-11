@@ -1,8 +1,7 @@
 ---
-- name: Convert disk to dynamic, initialize disk, create partition, and format in NTFS
+- name: Initialize disk, make dynamic, and format in NTFS
   hosts: all
   gather_facts: true
-  become: yes
 
   vars:
     data_disks:
@@ -18,29 +17,44 @@
       - disk_number: 4
         drive_letter: "G:"
         label: data4
+      # Add more disks as needed
 
   tasks:
-    - name: Convert disk to dynamic
+    - name: Initialize disk using diskpart
       win_shell: |
-        Get-Disk | Where-Object IsOffline -Eq $True | ForEach-Object { Set-Disk $_.Number -IsOffline $False; Set-Disk $_.Number -IsReadOnly $False }
-
-    - name: Initialize and create partition
-      win_partition:
-        disk_number: "{{ item.disk_number }}"
-        partition_style: gpt
+        $DiskNumber = {{ item.disk_number }}
+        $Script = @"
+          select disk $DiskNumber
+          online disk
+          attributes disk clear readonly
+        "@
+        Add-Content -Path "$env:TEMP\InitializeDiskScript.txt" -Value $Script
+        Start-Process -FilePath diskpart.exe -ArgumentList "/s $env:TEMP\InitializeDiskScript.txt" -Wait
       loop: "{{ data_disks }}"
 
-    - name: Create partition using all available space
-      win_partition:
-        disk_number: "{{ item.disk_number }}"
-        partition_number: 1
-        size: 100%
+    - name: Convert disk to dynamic using diskpart
+      win_shell: |
+        $DiskNumber = {{ item.disk_number }}
+        $Script = @"
+          select disk $DiskNumber
+          convert dynamic
+        "@
+        Add-Content -Path "$env:TEMP\ConvertToDynamicScript.txt" -Value $Script
+        Start-Process -FilePath diskpart.exe -ArgumentList "/s $env:TEMP\ConvertToDynamicScript.txt" -Wait
       loop: "{{ data_disks }}"
 
-    - name: Format partition in NTFS
-      win_format:
-        fs_type: NTFS
-        disk: "{{ item.disk_number }}"
-        partition: 1
-        label: "{{ item.label }}"
+    - name: Format partition in NTFS using diskpart
+      win_shell: |
+        $DiskNumber = {{ item.disk_number }}
+        $DriveLetter = "{{ item.drive_letter }}"
+        $Label = "{{ item.label }}"
+        $Script = @"
+          select disk $DiskNumber
+          clean
+          create partition primary
+          assign letter=$DriveLetter
+          format fs=ntfs label=$Label quick
+        "@
+        Add-Content -Path "$env:TEMP\FormatDiskScript.txt" -Value $Script
+        Start-Process -FilePath diskpart.exe -ArgumentList "/s $env:TEMP\FormatDiskScript.txt" -Wait
       loop: "{{ data_disks }}"
