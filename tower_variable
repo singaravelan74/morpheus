@@ -1,0 +1,10 @@
+---
+  - name: "Playbook to test the inventory_hostname and ansible_hostname"
+    gather_facts: no
+    hosts: all
+    tasks:
+
+    - name: "what is inventory_hostname"
+      debug: var=inventory_hostname
+    - name: "what is ansible_hostname"
+      debug: var=ansible_hostname
