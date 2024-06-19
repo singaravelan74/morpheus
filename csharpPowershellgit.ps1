@@ -50,5 +50,5 @@ Write-Output "Input String: $inputString"
 Write-Output "SHA256 Hash: $hash"
  
 $StartDate = (Get-Date).AddMinutes(-20)
-#start-sleep 100
+start-sleep 100
 Read-Pslog -StartDate $StartDate -AsJson
